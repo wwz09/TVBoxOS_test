@@ -1,0 +1,70 @@
+name: android_build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - userName: wwz09
+            repoName: TVBoxOS
+            branchName: main
+          - userName: wwz09
+            repoName: Box
+            branchName: main
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up JDK
+      - uses: actions/cache@v3
+        if: ${{ env.commit }}
+        with:
+          java-version: 1.8
+      - id: get-project
+        name: Get project name
+        run: echo "::set-output name=PROJECT::$(cat project-to-build)"
+      - name: Clone project
+        run: git clone --depth=1 ${{ steps.get-project.outputs.PROJECT }} TVBoxOSC
+      - name: Build the app
+        working-directory: ./TVBoxOSC
+        run: |
+          if [ ! -f "gradlew" ]; then gradle wrapper; fi
+          chmod +x gradlew
+          ./gradlew assemblerelease --build-cache --parallel --daemon --warning-mode all
+      - name: Prepare App
+        if: ${{ env.commit }}
+        working-directory: TVBoxOSC
+        run: |
+          rm -rf apk/
+          mkdir -p apk/
+          for file in `find ~ -name "*release*.apk" -print`; do
+            mv "$file" apk/TVBox_${{ matrix.userName }}_${{ env.tag }}.apk
+          done
+      - name: Upload App To Artifact
+        uses: actions/upload-artifact@v3
+        if: ${{ env.commit }}
+        with:
+          name: ${{ matrix.userName }}-${{ matrix.repoName }}
+          path: TVBoxOSC/apk/*
+      - name: Whether Or Not to Publish
+        if: ${{ inputs.donotpublish && env.commit }}
+        run: |
+          echo "commit=" >> $GITHUB_ENV
+      - name: Release and Upload Assets
+        uses: softprops/action-gh-release@v1
+        if: ${{ env.commit }}
+        with:
+          name: ${{ env.tag }}
+          tag_name: ${{ env.tag }}
+          body: "Credit: ${{ matrix.userName }}/${{ matrix.repoName }}\n
+                 Commit: ${{ env.commit }}"
+          files: |
+            TVBoxOSC/apk/*
+            TVBoxOSC/${{ env.commitS }}-source.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
