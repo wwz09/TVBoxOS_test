@@ -2,20 +2,6 @@ name: android_build
 
 on:
   workflow_dispatch:
-    inputs:
-      rebuild:
-        description: '忽略记录以重新构建'
-        required: false
-        type: boolean
-      donotpublish:
-        description: '构建后不发布新版'
-        required: false
-        type: boolean
-      testOption:
-        description: '测试选项，不建议勾选'
-        required: false
-        type: boolean
-
 jobs:
   build:
     runs-on: ubuntu-latest
