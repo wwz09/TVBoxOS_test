@@ -46,5 +46,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v2
         with:
-          name: TVBOX
+          name: ${{ matrix.userName }}-${{ matrix.repoName }}
           path: TVBoxOSC/app/build/outputs/apk/debug/*.apk
