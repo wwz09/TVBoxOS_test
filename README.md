@@ -1,6 +1,6 @@
 ## 个人学习自用
 
-## 感谢个位大神库
+## 感谢各位大神
 
 - [CatVodTVOfficial/TVBoxOSC](https://github.com/CatVodTVOfficial/TVBoxOSC)
 - [q215613905/TVBoxOS](https://github.com/q215613905/TVBoxOS) 
