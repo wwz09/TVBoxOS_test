@@ -23,6 +23,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Clone project
+        run: git clone --depth=1 ${{ steps.get-project.outputs.PROJECT }} TVBoxOSC
       - name: Build the app
         working-directory: ./TVBoxOSC
         run: |
