@@ -18,27 +18,19 @@
 
 https://github.com/wwz09/test/blob/main/app/src/main/res/values/strings.xml
 
-https://gitee.com/wwz09/test/blob/main/app/src/main/res/values/strings.xml
-
 # 2、修改版本号
 
 https://github.com/wwz09/test/blob/main/app/src/main/AndroidManifest.xml
 
-https://gitee.com/wwz09/test/blob/main/app/src/main/AndroidManifest.xml
-
 # 3、修改图标、背景
 
 https://github.com/wwz09/test/tree/main/app/src/main/res
-
-https://gitee.com/wwz09/test/tree/main/app/src/main/res
 
 # 4、修改内置源
 
 俊老仓库打开下面,第83行
 
 https://github.com/wwz09/test/blob/main/app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java
-
-takagen99大佬仓库 改这里;app/src/main/res/values-zh/strings.xml
 
 # 5、修改默认缩略图、硬解、dns
 
