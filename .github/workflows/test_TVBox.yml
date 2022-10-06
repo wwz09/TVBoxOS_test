@@ -1,4 +1,4 @@
-name: est_TVBox
+name: Test_TVBox
 
 on:
   workflow_dispatch:
