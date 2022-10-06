@@ -1,4 +1,4 @@
-name: android_build
+name: est_TVBox
 
 on:
   workflow_dispatch:
