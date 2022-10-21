@@ -15,7 +15,7 @@ jobs:
             repoName: TVBoxOS
             branchName: main
           - userName: wwz09
-            repoName: Box
+            repoName: QBox
             branchName: main
     steps:
       - name: Checkout
