@@ -40,13 +40,19 @@ jobs:
           echo "tag=$(git log --date=format:'%Y%m%d-%H%M' --pretty=format:%cd ${{ env.commitS }} -1)" >> $GITHUB_ENV
           zip -q -x ".git/*" -r ${{ env.commitS }}-source.zip .
           
-      - name: DIY
+      - name: DIY1
         if: ${{ env.commit }}
-        working-directory: ${{ matrix.repoName }}
         run: |
+          cd QBox
           sed -i 's%TVBox%${{ matrix.repoName }}%g' app/src/main/res/values/strings.xml
-          sed -i 's%HawkConfig.HOME_REC, 2%HawkConfig.HOME_REC, 1%g' app/src/main/java/com/github/tvbox/osc/base/App.java
-          sed -i 's%(HawkConfig.API_URL, "");%(HawkConfig.API_URL, "https://agit.ai/wwz09/ubuntu/raw/branch/master/box1.json");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java   
+          sed -i 's%(HawkConfig.API_URL, "");%(HawkConfig.API_URL, "https://agit.ai/wwz09/ubuntu/raw/branch/master/box1.json");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java
+          
+      - name: DIY2
+        if: ${{ env.commit }}
+        run: |
+          cd TBox
+          sed -i 's%TVBox%${{ matrix.repoName }}%g' app/src/main/res/values-zh/strings.xml
+          sed -i 's%HawkConfig.HOME_REC, 2%HawkConfig.HOME_REC, 1%g' app/src/main/java/com/github/tvbox/osc/base/App.java 
           sed -i 's%HomeActivity.getRes().getString(R.string.app_source));% "https://agit.ai/wwz09/ubuntu/raw/branch/master/box1.json");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java  
            
       - uses: actions/cache@v3
