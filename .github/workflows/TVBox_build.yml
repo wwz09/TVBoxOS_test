@@ -34,8 +34,8 @@ jobs:
       - name: Checkout Source Code and Zip
         if: ${{ env.commit }}
         run: |
-          git clone ${{ env.upStream }} TVBoxOSC
-          cd TVBoxOSC
+          git clone ${{ env.upStream }} ${{ matrix.repoName }}
+          cd ${{ matrix.repoName }}
           git checkout ${{ env.commit }}
           echo "tag=$(git log --date=format:'%Y%m%d-%H%M' --pretty=format:%cd ${{ env.commitS }} -1)" >> $GITHUB_ENV
           zip -q -x ".git/*" -r ${{ env.commitS }}-source.zip .
@@ -46,7 +46,8 @@ jobs:
         run: |
           sed -i 's%TVBox%${{ matrix.repoName }}%g' app/src/main/res/values/strings.xml   #名称修改
           sed -i 's%(HawkConfig.API_URL, "");%(HawkConfig.API_URL, "https://agit.ai/wwz09/ubuntu/raw/branch/master/box1.json");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java   
-          sed -i 's%HomeActivity.getRes().getString(R.string.app_source));% "https://agit.ai/wwz09/ubuntu/raw/branch/master/box1.json");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java
+          sed -i 's%HomeActivity.getRes().getString(R.string.app_source));% "https://agit.ai/wwz09/ubuntu/raw/branch/master/box1.json");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java  
+           
       - uses: actions/cache@v3
         if: ${{ env.commit }}
         with:
@@ -58,7 +59,7 @@ jobs:
             ${{ runner.os }}-${{ matrix.userName }}-
       - name: Extra Modify
         if: ${{ env.commit }}
-        working-directory: TVBoxOSC
+        working-directory: ${{ matrix.repoName }}
         run: |
           echo '修改VersionName'
           sed -i "/versionName/s#[0-9a-zA-Z_\.\'\"-]\+\$#\'${{ env.tag }}\'#" app/build.gradle
@@ -71,14 +72,14 @@ jobs:
           fi
       - name: Option For Test
         if: ${{ inputs.testOption }}
-        working-directory: TVBoxOSC
+        working-directory: ${{ matrix.repoName }}
         run: |
           #添加arm64支持，不支持ijk解码
           sed -i "/armeabi-v7a[\'\"]$/s#\$#, 'arm64-v8a'#" app/build.gradle
           sed -i "/armeabi-v7a[\'\"]$/s#\$#, 'arm64-v8a'#" player/build.gradle
       - name: Release Apk Sign
         if: ${{ env.commit }}
-        working-directory: TVBoxOSC
+        working-directory: ${{ matrix.repoName }}
         run: |
           signingConfigs='ICAgIHNpZ25pbmdDb25maWdzIHtcCiAgICAgICAgaWYgKHByb2plY3QuaGFzUHJvcGVydHkoIlJFTEVBU0VfU1RPUkVfRklMRSIpKSB7XAogICAgICAgICAgICBteUNvbmZpZyB7XAogICAgICAgICAgICAgICAgc3RvcmVGaWxlIGZpbGUoUkVMRUFTRV9TVE9SRV9GSUxFKVwKICAgICAgICAgICAgICAgIHN0b3JlUGFzc3dvcmQgUkVMRUFTRV9TVE9SRV9QQVNTV09SRFwKICAgICAgICAgICAgICAgIGtleUFsaWFzIFJFTEVBU0VfS0VZX0FMSUFTXAogICAgICAgICAgICAgICAga2V5UGFzc3dvcmQgUkVMRUFTRV9LRVlfUEFTU1dPUkRcCiAgICAgICAgICAgICAgICB2MVNpZ25pbmdFbmFibGVkIHRydWVcCiAgICAgICAgICAgICAgICB2MlNpZ25pbmdFbmFibGVkIHRydWVcCiAgICAgICAgICAgICAgICBlbmFibGVWM1NpZ25pbmcgPSB0cnVlXAogICAgICAgICAgICAgICAgZW5hYmxlVjRTaWduaW5nID0gdHJ1ZVwKICAgICAgICAgICAgfVwKICAgICAgICB9XAogICAgfVwKXA=='
           signingConfig='ICAgICAgICAgICAgaWYgKHByb2plY3QuaGFzUHJvcGVydHkoIlJFTEVBU0VfU1RPUkVfRklMRSIpKSB7XAogICAgICAgICAgICAgICAgc2lnbmluZ0NvbmZpZyBzaWduaW5nQ29uZmlncy5teUNvbmZpZ1wKICAgICAgICAgICAgfVwK'
@@ -92,13 +93,13 @@ jobs:
           sed -i '$a\RELEASE_KEY_PASSWORD=TVBoxOSC'         ./gradle.properties
       - name: Build With Gradle
         if: ${{ env.commit }}
-        working-directory: TVBoxOSC
+        working-directory: ${{ matrix.repoName }}
         run: |
           chmod +x gradlew
           ./gradlew assemblerelease --build-cache --parallel --daemon --warning-mode all
       - name: Prepare App
         if: ${{ env.commit }}
-        working-directory: TVBoxOSC
+        working-directory: ${{ matrix.repoName }}
         run: |
           rm -rf apk/
           mkdir -p apk/
@@ -110,6 +111,6 @@ jobs:
         if: ${{ env.commit }}
         with:
           name: ${{ matrix.userName }}-${{ matrix.repoName }}
-          path: TVBoxOSC/apk/*
+          path: ${{ matrix.repoName }}/apk/*
 
       
