@@ -124,11 +124,8 @@ jobs:
         uses: ncipollo/release-action@v1
         if: ${{ env.commit }}
         with:
-          name: ${{ env.tag }}
-          tag: ${{ env.tag }}
-          artifacts: |
-            ${{ matrix.repoName }}/apk/*.apk
-            ${{ matrix.repoName }}/source-${{ env.commitS }}.zip}
+          name: ${{ matrix.repoName }}
+          path: ${{ matrix.repoName }}/apk/*
       
       - name: Push to master
         if: ${{ env.commit }}
