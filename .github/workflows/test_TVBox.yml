@@ -41,10 +41,10 @@ jobs:
           zip -q -x ".git/*" -r ${{ env.commitS }}-source.zip .
           
       - name: DIY
+        if: ${{ env.commit }}
+        working-directory: ${{ matrix.repoName }}
         run: |
-         cd ${{ matrix.repoName }}
-         #名称修改
-          sed -i 's/TVBox/${{ matrix.repoName }}/g' 　app/src/main/res/values/strings.xml
+          sed -i 's/TVBox/${{ matrix.repoName }}/g' app/src/main/res/values/strings.xml   #名称修改
           
       - uses: actions/cache@v3
         if: ${{ env.commit }}
