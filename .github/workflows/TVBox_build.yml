@@ -119,14 +119,7 @@ jobs:
         if: ${{ inputs.donotpublish && env.commit }}
         run: |
           echo "commit=" >> $GITHUB_ENV
-          
-      - name: Release and Upload Assets
-        uses: ncipollo/release-action@v1
-        if: ${{ env.commit }}
-        with:
-          name: ${{ matrix.repoName }}
-          path: ${{ matrix.repoName }}/apk/*
-      
+             
       - name: Push to master
         if: ${{ env.commit }}
         run: |
