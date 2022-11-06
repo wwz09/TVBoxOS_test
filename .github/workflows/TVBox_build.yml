@@ -114,6 +114,24 @@ jobs:
         with:
           name: ${{ matrix.repoName }}
           path: ${{ matrix.repoName }}/apk/*
+       
+      - name: Whether Or Not to Publish
+        if: ${{ inputs.donotpublish && env.commit }}
+        run: |
+          echo "commit=" >> $GITHUB_ENV
+          
+      - name: Release and Upload Assets
+        uses: ncipollo/release-action@v1
+        if: ${{ env.commit }}
+        with:
+          name: ${{ env.tag }}
+          tag: ${{ env.tag }}
+          bodyFile:  ${{ matrix.repoName }}/apk/${{ matrix.repoName }}_${{ env.tag }}.apk
+          allowUpdates: true
+          removeArtifacts: true
+          artifacts: |
+            ${{ matrix.repoName }}/apk/*.apk
+        
      
       
       
