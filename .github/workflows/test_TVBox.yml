@@ -1,4 +1,4 @@
-name: Test_TVBox
+name: test_TVBox
 
 on:
  
@@ -44,10 +44,13 @@ jobs:
         if: ${{ env.commit }}
         working-directory: ${{ matrix.repoName }}
         run: |
-          sed -i 's%TVBox%${{ matrix.repoName }}%g' app/src/main/res/values/strings.xml   #名称修改
+          cp -rf $GITHUB_WORKSPACE/DIY/values-zh app/src/main/res/values-zh
+          sed -i 's%TVBox%${{ matrix.repoName }}%g' app/src/main/res/values/strings.xml
+          sed -i 's%TVBox%${{ matrix.repoName }}%g' app/src/main/res/values-zh/strings.xml
+          sed -i 's%HawkConfig.HOME_REC, 2%HawkConfig.HOME_REC, 1%g' app/src/main/java/com/github/tvbox/osc/base/App.java
           sed -i 's%(HawkConfig.API_URL, "");%(HawkConfig.API_URL, "https://agit.ai/wwz09/ubuntu/raw/branch/master/box1.json");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java   
-          sed -i 's%HomeActivity.getRes().getString(R.string.app_source));% "https://agit.ai/wwz09/ubuntu/raw/branch/master/box1.json");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java   
-          
+          sed -i 's%HomeActivity.getRes().getString(R.string.app_source));% "https://agit.ai/wwz09/ubuntu/raw/branch/master/box1.json");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java  
+           
       - uses: actions/cache@v3
         if: ${{ env.commit }}
         with:
@@ -97,20 +100,31 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew assemblerelease --build-cache --parallel --daemon --warning-mode all
+      
       - name: Prepare App
         if: ${{ env.commit }}
         working-directory: ${{ matrix.repoName }}
         run: |
           rm -rf apk/
           mkdir -p apk/
-          for file in `find ~ -name "*release*.apk" -print`; do
-            mv "$file" apk/TVBox_${{ matrix.userName }}_${{ env.tag }}.apk
+          for file in `find ~ -name "*.apk" -print`; do
+            mv "$file" apk/${{ matrix.repoName }}_${{ env.tag }}.apk
           done
+      
       - name: Upload App To Artifact
         uses: actions/upload-artifact@v3
         if: ${{ env.commit }}
         with:
-          name: ${{ matrix.userName }}-${{ matrix.repoName }}
+          name: ${{ matrix.repoName }}
           path: ${{ matrix.repoName }}/apk/*
-
+       
+      - name: Whether Or Not to Publish
+        if: ${{ inputs.donotpublish && env.commit }}
+        run: |
+          echo "commit=" >> $GITHUB_ENV
+          
+      
+        
+     
+      
       
