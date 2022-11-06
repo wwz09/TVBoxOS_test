@@ -12,10 +12,10 @@ jobs:
       matrix:
         include:
           - userName: wwz09
-            repoName: TVBoxOS
+            repoName: QQBox
             branchName: main
           - userName: wwz09
-            repoName: QBox
+            repoName: TTBox
             branchName: main
     steps:
       - name: Checkout
