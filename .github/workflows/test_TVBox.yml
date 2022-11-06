@@ -44,7 +44,7 @@ jobs:
         run: |
          cd ${{ matrix.repoName }}
          #名称修改
-          sed -i 's/TVBox/${{ matrix.repoName }}/g' /app/src/main/res/values/strings.xml
+          sed -i 's/TVBox/${{ matrix.repoName }}/g' 　app/src/main/res/values/strings.xml
           
       - uses: actions/cache@v3
         if: ${{ env.commit }}
