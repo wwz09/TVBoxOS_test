@@ -44,9 +44,9 @@ jobs:
         if: ${{ env.commit }}
         working-directory: ${{ matrix.repoName }}
         run: |
-          sed -i 's/TVBox/${{ matrix.repoName }}/g' app/src/main/res/values/strings.xml   #名称修改
-          sed -i 's/(HawkConfig.API_URL, "");/(HawkConfig.API_URL, "https://agit.ai/wwz09/ubuntu/raw/branch/master/box1.json");/g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java   
-          sed -i 's/HomeActivity.getRes().getString(R.string.app_source));/ "https://agit.ai/wwz09/ubuntu/raw/branch/master/box1.json");/g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java   
+          sed -i 's%TVBox%${{ matrix.repoName }}%g' app/src/main/res/values/strings.xml   #名称修改
+          sed -i 's%(HawkConfig.API_URL, "");%(HawkConfig.API_URL, "https://agit.ai/wwz09/ubuntu/raw/branch/master/box1.json");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java   
+          sed -i 's%HomeActivity.getRes().getString(R.string.app_source));% "https://agit.ai/wwz09/ubuntu/raw/branch/master/box1.json");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java   
           
       - uses: actions/cache@v3
         if: ${{ env.commit }}
