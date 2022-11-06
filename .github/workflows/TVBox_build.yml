@@ -113,13 +113,6 @@ jobs:
           name: ${{ matrix.userName }}-${{ matrix.repoName }}
           path: ${{ matrix.repoName }}/apk/*
           
-      - name: Upload App To Artifact
-        uses: actions/upload-artifact@v3
-        if: ${{ env.commit }}
-        with:
-          name: com.github.tvboxhfr.osc
-          path: ${{ matrix.repoName }}/apk/*
-          
       - name: Release and Upload Assets
         uses: softprops/action-gh-release@v1
         if: ${{ env.commit }}
