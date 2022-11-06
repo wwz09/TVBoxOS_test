@@ -105,7 +105,7 @@ jobs:
           rm -rf apk/
           mkdir -p apk/
           for file in `find ~ -name "*.apk" -print`; do
-            mv "$file" apk/
+            mv "$file" apk/${{ matrix.repoName }}_${{ env.tag }}.apk
           done
       
       - name: Upload App To Artifact
@@ -120,18 +120,10 @@ jobs:
         run: |
           echo "commit=" >> $GITHUB_ENV
              
-      - name: Push to master
-        if: ${{ env.commit }}
-        run: |
-          rm -rf ${{ matrix.repoName }}
-          sed -i '/url =/d' ./.git/config
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git remote set-url --add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
-          git pull --rebase
-          sed -i "/${{ matrix.userName }}\/${{ matrix.repoName }}/s#Updated: [a-zA-Z0-9]*#Updated: ${{ env.commit }}#" README.md
-          git add --all
-          git commit -m "${{ env.commit }}"
-          git push -u -f origin master
+      - name: Upload App To Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.repoName }}.osc
+          path: ${{ matrix.repoName }}/apk/*
       
       
