@@ -12,10 +12,10 @@ jobs:
       matrix:
         include:
           - userName: wwz09
-            repoName: QQBox
+            repoName: QBox
             branchName: main
           - userName: wwz09
-            repoName: TTBox
+            repoName: TBox
             branchName: main
     steps:
       - name: Checkout
