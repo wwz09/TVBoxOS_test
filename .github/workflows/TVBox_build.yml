@@ -112,6 +112,38 @@ jobs:
         with:
           name: ${{ matrix.userName }}-${{ matrix.repoName }}
           path: ${{ matrix.repoName }}/apk/*
-         
+          
+      - name: Upload App To Artifact
+        uses: actions/upload-artifact@v3
+        if: ${{ env.commit }}
+        with:
+          name: com.github.tvboxhfr.osc
+          path: ${{ matrix.repoName }}/apk/*
+          
+      - name: Release and Upload Assets
+        uses: softprops/action-gh-release@v1
+        if: ${{ env.commit }}
+        with:
+          name: ${{ env.tag }}
+          tag_name: ${{ env.tag }}
+          body: ${{ env.commit }}
+          files: |
+            ${{ matrix.repoName }}/apk/*
+            ${{ matrix.repoName }}/${{ env.commitS }}-source.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Push to master
+        if: ${{ env.commit }}
+        run: |
+          rm -rf ${{ matrix.repoName }}
+          sed -i "/Updated Commit/c\\+ Updated Commit: ${{ env.commit }}" README.md
+          sed -i '/url =/d' ./.git/config
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote set-url --add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+          git add --all
+          git commit -m "${{ env.commit }}"
+          git push -u -f origin master   
       
       
