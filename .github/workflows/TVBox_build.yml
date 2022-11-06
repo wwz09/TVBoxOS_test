@@ -124,7 +124,7 @@ jobs:
         with:
           name: ${{ env.tag }}
           tag: ${{ env.tag }}
-          bodyFile: ${{ matrix.repoName }}/apk/${{ matrix.userName }}-Release.log
+          bodyFile: ${{ matrix.repoName }}/apk/TVBox_${{ matrix.userName }}_${{ env.tag }}.apk
           allowUpdates: true
           removeArtifacts: true
           artifacts: |
