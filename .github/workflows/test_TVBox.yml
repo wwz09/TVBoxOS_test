@@ -17,6 +17,9 @@ jobs:
           - userName: jinqiusky
             repoName: TVBoxOSC-P
             branchName: main
+          - userName: clanTV
+            repoName: clanTV
+            branchName: main
     steps:
       - name: Checkout
         uses: actions/checkout@v3
