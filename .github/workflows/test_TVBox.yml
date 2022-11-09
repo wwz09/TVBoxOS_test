@@ -14,8 +14,8 @@ jobs:
           - userName: q215613905
             repoName: TVBoxOS
             branchName: main
-          - userName: jinqiusky
-            repoName: TVBoxOSC-P
+          - userName: ccibg
+            repoName: TVBoxOSC
             branchName: main
           - userName: wangmingshan1314
             repoName: takagen99-TVBoxOSC
