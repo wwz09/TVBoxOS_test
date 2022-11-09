@@ -14,12 +14,12 @@ jobs:
           - userName: q215613905
             repoName: TVBoxOS
             branchName: main
-          - userName: ccibg
-            repoName: TVBoxOSC
+          - userName: kensonmiao
+            repoName: CatVodTVOSC
             branchName: main
-          - userName: wangmingshan1314
-            repoName: takagen99-TVBoxOSC
-            branchName: main
+          - userName: FongMi
+            repoName: TV
+            branchName: dev
     steps:
       - name: Checkout
         uses: actions/checkout@v3
