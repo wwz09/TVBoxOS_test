@@ -14,6 +14,9 @@ jobs:
           - userName: q215613905
             repoName: TVBoxOS
             branchName: main
+          - userName: takagen99
+            repoName: Box
+            branchName: main
           - userName: kensonmiao
             repoName: CatVodTVOSC
             branchName: main
