@@ -20,8 +20,8 @@ jobs:
           - userName: llazyl
             repoName: TVBox
             branchName: main
-          - userName: springfine
-            repoName: TVBoxOSC-1
+          - userName: kensonmiao
+            repoName: CatVodTVOSC
             branchName: main
     steps:
       - name: Checkout
@@ -51,6 +51,9 @@ jobs:
         working-directory: ${{ matrix.repoName }}
         run: |
           cp -rf $GITHUB_WORKSPACE/DIY/values-zh app/src/main/res/values-zh
+          cp -rf $GITHUB_WORKSPACE/DIY/xwalk_shared_library-23.53.589.4.aar app/libs/xwalk_shared_library-23.53.589.4.aar
+          cp -rf $GITHUB_WORKSPACE/DIY/thunder.jar app/libs/thunder.jar
+          cp -rf $GITHUB_WORKSPACE/DIY/pyramid.aar app/libs/pyramid.aar
           sed -i 's%TVBox%${{ matrix.repoName }}%g' app/src/main/res/values/strings.xml
           sed -i 's%TVBox%${{ matrix.repoName }}%g' app/src/main/res/values-zh/strings.xml
           sed -i 's%HawkConfig.HOME_REC, 2%HawkConfig.HOME_REC, 1%g' app/src/main/java/com/github/tvbox/osc/base/App.java
