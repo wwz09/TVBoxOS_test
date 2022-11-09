@@ -20,8 +20,8 @@ jobs:
           - userName: llazyl
             repoName: TVBox
             branchName: main
-          - userName: kensonmiao
-            repoName: CatVodTVOSC
+          - userName: 81892004
+            repoName: TVBox
             branchName: main
     steps:
       - name: Checkout
