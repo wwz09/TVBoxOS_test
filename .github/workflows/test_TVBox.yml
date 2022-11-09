@@ -17,8 +17,8 @@ jobs:
           - userName: jinqiusky
             repoName: TVBoxOSC-P
             branchName: main
-          - userName: clanTV
-            repoName: clanTV
+          - userName: wangmingshan1314
+            repoName: takagen99-TVBoxOSC
             branchName: main
     steps:
       - name: Checkout
