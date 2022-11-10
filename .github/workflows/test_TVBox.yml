@@ -20,8 +20,8 @@ jobs:
           - userName: llazyl
             repoName: TVBox
             branchName: main
-          - userName: 81892004
-            repoName: TVBox
+          - userName: wwz09
+            repoName: MaoTV
             branchName: main
     steps:
       - name: Checkout
