@@ -1,5 +1,4 @@
 on:
-
   workflow_dispatch:
     inputs:
       rebuild:
@@ -50,7 +49,7 @@ jobs:
           zip -q -x ".git/*" -r source-${{ env.commitS }}.zip .
       - name: DIY
         if: ${{ env.commit }}
-        working-directory: ${{ matrix.repoName }}
+        working-directory: TVBoxOSC
         run: |
           cp -rf $GITHUB_WORKSPACE/DIY/xwalk_shared_library-23.53.589.4.aar app/libs/xwalk_shared_library-23.53.589.4.aar
           cp -rf $GITHUB_WORKSPACE/DIY/thunder.jar app/libs/thunder.jar
