@@ -92,18 +92,14 @@ jobs:
           name: ${{ matrix.appName }}
           path: ${{ matrix.repoName }}/apk/*
           
-      - name: Release and Upload Assets
+     - name: release
         uses: softprops/action-gh-release@v1
-        if: ${{ env.commit }}
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: ${{ env.tag }}
-          tag_name: ${{ env.tag }}
-          body: ${{ env.commit }}
-          files: |
-            ${{ matrix.repoName }}/apk/*.apk
-            ${{ matrix.repoName }}/source.zip
+          files: "${{ matrix.repoName }}/apk/*.apk"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+ 
 
      
           
