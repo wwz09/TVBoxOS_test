@@ -119,7 +119,7 @@ jobs:
         if: ${{ env.commit }}
         with:
          name: ${{ env.tag }}
-         tag_name: ${{ env.tag }}_${{ matrix.userName }}
+         tag_name: ${{ env.tag }}
          files: |
             ${{ matrix.repoName }}/apk/*   
         env:
