@@ -30,16 +30,15 @@ jobs:
             echo "commit=$commit" >> $GITHUB_ENV
             echo "commitS=${commit:0:7}" >> $GITHUB_ENV
           fi
-      - name: Checkout Source Code and Zip
+     - name: Checkout Source Code and Zip
         if: ${{ env.commit }}
         run: |
-          git clone ${{ env.upStream }} ${{ matrix.repoName }}
+          git clone ${{ env.upsteam }} ${{ matrix.repoName }}
           cd ${{ matrix.repoName }}
           git checkout ${{ env.commit }}
-          echo "tag=$(git log --date=format:'%Y%m%d-%H%M' --pretty=format:%cd ${{ env.commitS }} -1)" >> $GITHUB_ENV
-          zip -q -x ".git/*" -r ${{ env.commitS }}-source.zip .
+          zip -q -x ".git/*" -r source.zip .
           
-      - name: DIY
+     - name: DIY
         if: ${{ env.commit }}
         working-directory: ${{ matrix.repoName }}
         run: |
@@ -52,37 +51,8 @@ jobs:
           cp -rf $GITHUB_WORKSPACE/DIY/png/drawable-xxxhdpi/app_icon.png app/src/main/res/drawable-xxxhdpi/app_icon.png
           cp -rf $GITHUB_WORKSPACE/DIY/png/app_bg.png app/src/main/res/drawable/app_bg.png
           sed -i 's%TVBox%QBox%g' app/src/main/res/values/strings.xml
-          sed -i 's%(HawkConfig.API_URL, "");%(HawkConfig.API_URL, "https://0a.fit/bbNnz");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java   
-           
-      - uses: actions/cache@v3
-        if: ${{ env.commit }}
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-${{ matrix.userName }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.userName }}-
-      - name: Extra Modify
-        if: ${{ env.commit }}
-        working-directory: ${{ matrix.repoName }}
-        run: |
-          echo '修改VersionName'
-          sed -i "/versionName/s#[0-9a-zA-Z_\.\'\"-]\+\$#\'${{ env.tag }}\'#" app/build.gradle
-          sed -i "/android:text=/s#=\"#=\"${{ env.tag }}\\\\n\\\\n#" app/src/main/res/layout/dialog_about.xml
-          echo 'crosswalk源，防挂'
-          if grep -q 'crosswalk' build.gradle; then
-            sed -i "/crosswalk/a\        maven { url 'https://o0halflife0o.github.io/crosswalk/releases/crosswalk/android/maven2' }" build.gradle
-          else
-            sed -i "/jitpack.io/a\        maven { url 'https://o0halflife0o.github.io/crosswalk/releases/crosswalk/android/maven2' }" build.gradle
-          fi
-      - name: Option For Test
-        if: ${{ inputs.testOption }}
-        working-directory: ${{ matrix.repoName }}
-        run: |
-          #添加arm64支持，不支持ijk解码
-          sed -i "/armeabi-v7a[\'\"]$/s#\$#, 'arm64-v8a'#" app/build.gradle
-          sed -i "/armeabi-v7a[\'\"]$/s#\$#, 'arm64-v8a'#" player/build.gradle
+          sed -i 's%(HawkConfig.API_URL, "");%(HawkConfig.API_URL, "https://0a.fit/bbNnz");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java  
+             
       - name: Release Apk Sign
         if: ${{ env.commit }}
         working-directory: ${{ matrix.repoName }}
@@ -91,23 +61,20 @@ jobs:
           signingConfig='ICAgICAgICAgICAgaWYgKHByb2plY3QuaGFzUHJvcGVydHkoIlJFTEVBU0VfU1RPUkVfRklMRSIpKSB7XAogICAgICAgICAgICAgICAgc2lnbmluZ0NvbmZpZyBzaWduaW5nQ29uZmlncy5teUNvbmZpZ1wKICAgICAgICAgICAgfVwK'
           signingConfigs="$(echo "$signingConfigs" |base64 -d )"
           signingConfig="$(echo "$signingConfig" |base64 -d )"
-          sed -i -e "/defaultConfig {/i\\$signingConfigs " -e "/debug {/a\\$signingConfig " -e "/release {/a\\$signingConfig " app/build.gradle
+          sed -i -e "/defaultConfig /i\\$signingConfigs " -e "/debug /a\\$signingConfig " -e "/release /a\\$signingConfig " app/build.gradle
           cp -f ${{ github.workspace }}/.github/workflows/TVBoxOSC.jks app/TVBoxOSC.jks
           sed -i '$a\RELEASE_STORE_FILE=./TVBoxOSC.jks'     ./gradle.properties
           sed -i '$a\RELEASE_KEY_ALIAS=TVBoxOSC'            ./gradle.properties
           sed -i '$a\RELEASE_STORE_PASSWORD=TVBoxOSC'       ./gradle.properties
           sed -i '$a\RELEASE_KEY_PASSWORD=TVBoxOSC'         ./gradle.properties
-      - name: Setup Gradle
-        if: ${{ env.commit }}
-        uses: gradle/gradle-build-action@v2
-        
+          
       - name: Build With Gradle
         if: ${{ env.commit }}
         working-directory: ${{ matrix.repoName }}
         run: |
           chmod +x gradlew
           ./gradlew assemblerelease --build-cache --parallel --daemon --warning-mode all
-      
+          
       - name: Prepare App
         if: ${{ env.commit }}
         working-directory: ${{ matrix.repoName }}
@@ -117,18 +84,7 @@ jobs:
           for file in `find ~ -name "*.apk" -print`; do
             mv "$file" apk/${{ matrix.appName }}_${{ env.tag }}.apk
           done
-      - name: Release Note
-        if: ${{ env.commit }}
-        working-directory:  ${{ matrix.repoName }}
-        run: |
-          lastCommit=$(grep "${{ matrix.userName }}\/${{ matrix.repoName }}" ${{ github.workspace }}/README.md |grep -o '[a-z0-9]\{40\}')
-          export LESSCHARSET=utf-8
-          echo -e "Credit: ${{ matrix.userName }}/${{ matrix.repoName }}\nCommit: ${{ env.commit }}\nChangelog:" > apk/${{ matrix.userName }}-Release.log
-          if [ "${{ env.commit }}" == "${lastCommit}" ]; then
-            git log --pretty=format:%B ${{ env.commitS }} -1 |sed -e "s# \{2,\}#\n#g" -e "/^Merge \(pull\|branch\|remote\)/d" -e '/^$/d' |cat -n |sort -k2,2 -k1,1n |uniq -f1 |sort -k1,1n |cut -f2- >> apk/${{ matrix.userName }}-Release.log
-          else
-            git log --pretty=format:%B ${{ env.commitS }}...${lastCommit:0:7} |sed -e "s# \{2,\}#\n#g" -e "/^Merge \(pull\|branch\|remote\)/d" -e '/^$/d' |cat -n |sort -k2,2 -k1,1n |uniq -f1 |sort -k1,1n |cut -f2- >> apk/${{ matrix.userName }}-Release.log
-          fi
+          
       - name: Upload App To Artifact
         uses: actions/upload-artifact@v3
         if: ${{ env.commit }}
@@ -136,23 +92,18 @@ jobs:
           name: ${{ matrix.appName }}
           path: ${{ matrix.repoName }}/apk/*
           
-      - name: Whether Or Not to Publish
-        if: ${{ inputs.donotpublish && env.commit }}
-        run: |
-          echo "commit=" >> $GITHUB_ENV
-          
       - name: Release and Upload Assets
-        uses: ncipollo/release-action@v1
+        uses: softprops/action-gh-release@v1
         if: ${{ env.commit }}
         with:
           name: ${{ env.tag }}
-          tag: ${{ env.tag }}
-          bodyFile:  ${{ matrix.repoName }}/apk/${{ matrix.appName }}-Release.log
-          allowUpdates: true
-          removeArtifacts: true
-          artifacts: |
-             ${{ matrix.repoName }}/apk/*.apk
-             
+          tag_name: ${{ env.tag }}
+          body: ${{ env.commit }}
+          files: |
+            apk/*.apk
+            TVBoxOSC/source.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
      
           
