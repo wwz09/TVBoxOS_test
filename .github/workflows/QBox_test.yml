@@ -94,7 +94,9 @@ jobs:
           
       - name: release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+        if:  ${{ github.ref }}
+        name: Release ${{ github.ref }}
+        tag: ${{ github.ref }}
         with:
           files: "${{ matrix.repoName }}/apk/*.apk"
         env:
