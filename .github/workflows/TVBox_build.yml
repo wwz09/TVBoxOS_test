@@ -44,7 +44,7 @@ jobs:
           cd ${{ matrix.repoName }}
           git checkout ${{ env.commit }}
           echo "tag=$(git log --date=format:'%Y%m%d-%H%M' --pretty=format:%cd ${{ env.commitS }} -1)" >> $GITHUB_ENV
-          zip -q -x ".git/*" -r ${{ env.commitS }}-source.zip .
+          zip -q -x ".git/*" -r source-${{ env.commitS }}.zip .
           
       - name: DIY
         if: ${{ env.commit }}
@@ -60,15 +60,6 @@ jobs:
           sed -i 's%(HawkConfig.API_URL, "");%(HawkConfig.API_URL, "https://0a.fit/bbNnz");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java   
           sed -i 's%HomeActivity.getRes().getString(R.string.app_source));% "https://0a.fit/bbNnz");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java     
            
-      - uses: actions/cache@v3
-        if: ${{ env.commit }}
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-${{ matrix.userName }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.userName }}-
       - name: Extra Modify
         if: ${{ env.commit }}
         working-directory: ${{ matrix.repoName }}
@@ -103,6 +94,11 @@ jobs:
           sed -i '$a\RELEASE_KEY_ALIAS=TVBoxOSC'            ./gradle.properties
           sed -i '$a\RELEASE_STORE_PASSWORD=TVBoxOSC'       ./gradle.properties
           sed -i '$a\RELEASE_KEY_PASSWORD=TVBoxOSC'         ./gradle.properties
+          
+      - name: Setup Gradle
+        if: ${{ env.commit }}
+        uses: gradle/gradle-build-action@v2
+        
       - name: Build With Gradle
         if: ${{ env.commit }}
         working-directory: ${{ matrix.repoName }}
@@ -132,8 +128,16 @@ jobs:
         run: |
           echo "commit=" >> $GITHUB_ENV
           
-      
-        
-     
+      - name: Release and Upload Assets
+        uses: ncipollo/release-action@v1
+        if: ${{ env.commit }}
+        with:
+          name: ${{ env.tag }}
+          tag: ${{ env.tag }}
+          allowUpdates: true
+          removeArtifacts: true
+          artifacts: |
+            ${{ matrix.repoName }}/apk/*.apk
+            
       
       
