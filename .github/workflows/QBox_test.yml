@@ -114,12 +114,18 @@ jobs:
             mv "$file" apk/${{ matrix.appName }}_${{ env.tag }}.apk
           done
           
-      - name: Release App
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Release and Upload Assets
+        uses: ncipollo/release-action@v1
+        if: ${{ env.commit }}
         with:
-          files:
-            ${{ matrix.repoName }}/apk/*
+          name: ${{ env.tag }}
+          tag: ${{ env.tag }}
+          bodyFile:  ${{ matrix.repoName }}/apk/${{ matrix.userName }}-Release.log
+          allowUpdates: true
+          removeArtifacts: true
+          artifacts: |
+             ${{ matrix.repoName }}/apk/*.apk
+             ${{ matrix.repoName }}/source-${{ env.commitS }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
