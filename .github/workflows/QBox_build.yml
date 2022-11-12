@@ -11,8 +11,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - userName: wwz09
-            repoName: QBox
+          - userName: q215613905
+            repoName: TVBoxOS
             branchName: main
           
     steps:
