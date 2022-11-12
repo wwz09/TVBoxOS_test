@@ -14,12 +14,15 @@ jobs:
           - userName: wwz09
             repoName: QBox
             branchName: main
+            appName: QBox
           - userName: wwz09
             repoName: TBox
             branchName: main
+            appName: TBox
           - userName: wwz09
             repoName: MaoTV
             branchName: main
+            appName: MaoTV
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -114,14 +117,14 @@ jobs:
           rm -rf apk/
           mkdir -p apk/
           for file in `find ~ -name "*.apk" -print`; do
-            mv "$file" apk/${{ matrix.repoName }}_${{ env.tag }}.apk
+            mv "$file" apk/${{ matrix.appName }}_${{ env.tag }}.apk
           done
       
       - name: Upload App To Artifact
         uses: actions/upload-artifact@v3
         if: ${{ env.commit }}
         with:
-          name: ${{ matrix.repoName }}
+          name: ${{ matrix.appName }}
           path: ${{ matrix.repoName }}/apk/*
        
       - name: Whether Or Not to Publish
