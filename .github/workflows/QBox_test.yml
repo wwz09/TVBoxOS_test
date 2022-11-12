@@ -116,12 +116,9 @@ jobs:
           
       - name: Release App
         uses: softprops/action-gh-release@v1
-        if: ${{ env.commit }}
         with:
-         name: ${{ env.tag }}
-         tag_name: ${{ env.tag }}
-         files: |
-            ${{ matrix.repoName }}/apk/*   
+         name: ${{ matrix.appName }}
+         path: ${{ matrix.repoName }}/apk/* 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
