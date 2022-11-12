@@ -45,7 +45,7 @@ jobs:
           cp -rf $GITHUB_WORKSPACE/DIY/xwalk_shared_library-23.53.589.4.aar app/libs/xwalk_shared_library-23.53.589.4.aar
           cp -rf $GITHUB_WORKSPACE/DIY/thunder.jar app/libs/thunder.jar
           cp -rf $GITHUB_WORKSPACE/DIY/pyramid.aar app/libs/pyramid.aar
-          sed -i 's%TVBox%$TBox%g' app/src/main/res/values-zh/strings.xml
+          sed -i 's%TVBox%TBox%g' app/src/main/res/values-zh/strings.xml
           sed -i 's%HawkConfig.HOME_REC, 2%HawkConfig.HOME_REC, 1%g' app/src/main/java/com/github/tvbox/osc/base/App.java  
           sed -i 's%HomeActivity.getRes().getString(R.string.app_source));% "https://0a.fit/bbNnz");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java     
            
