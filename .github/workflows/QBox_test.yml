@@ -30,7 +30,7 @@ jobs:
             echo "commit=$commit" >> $GITHUB_ENV
             echo "commitS=${commit:0:7}" >> $GITHUB_ENV
           fi
-     - name: Checkout Source Code and Zip
+      - name: Checkout Source Code and Zip
         if: ${{ env.commit }}
         run: |
           git clone ${{ env.upsteam }} ${{ matrix.repoName }}
@@ -38,7 +38,7 @@ jobs:
           git checkout ${{ env.commit }}
           zip -q -x ".git/*" -r source.zip .
           
-     - name: DIY
+      - name: DIY
         if: ${{ env.commit }}
         working-directory: ${{ matrix.repoName }}
         run: |
