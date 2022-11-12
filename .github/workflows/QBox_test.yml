@@ -33,7 +33,7 @@ jobs:
       - name: Checkout Source Code and Zip
         if: ${{ env.commit }}
         run: |
-          git clone ${{ env.upsteam }} ${{ matrix.repoName }}
+          git clone ${{ env.upStream }} ${{ matrix.repoName }}
           cd ${{ matrix.repoName }}
           git checkout ${{ env.commit }}
           zip -q -x ".git/*" -r source.zip .
