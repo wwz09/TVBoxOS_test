@@ -14,6 +14,7 @@ jobs:
           - userName: takagen99
             repoName: Box
             branchName: main
+            appName: TBox
    
     steps:
       - name: Checkout
@@ -106,7 +107,7 @@ jobs:
           rm -rf apk/
           mkdir -p apk/
           for file in `find ~ -name "*.apk" -print`; do
-            mv "$file" apk/${{ matrix.repoName }}_${{ env.tag }}.apk
+           mv "$file" apk/${{ matrix.appName }}_${{ env.tag }}.apk
           done
       
       - name: Upload App To Artifact
