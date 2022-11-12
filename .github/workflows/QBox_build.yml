@@ -113,7 +113,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: ${{ env.commit }}
         with:
-          name: ${{ matrix.repoName }}
+          name: ${{ matrix.appName }}
           path: ${{ matrix.repoName }}/apk/*
        
       - name: Whether Or Not to Publish
