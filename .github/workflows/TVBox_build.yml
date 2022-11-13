@@ -24,7 +24,7 @@ jobs:
           - userName: wwz09
             repoName: MaoTV
             branchName: main
-            appName: TBox
+            appName: MaoTV
             osName: mt
    
     steps:
