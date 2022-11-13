@@ -125,15 +125,6 @@ jobs:
         run: |
           echo "commit=" >> $GITHUB_ENV
           
-      - name: Release and Upload Assets
-        uses: ncipollo/release-action@v1
-        if: ${{ env.commit }}
-        with:
-          name: ${{ env.tag }}
-          tag: ${{ env.tag }}
-          allowUpdates: true
-          removeArtifacts: true
-          artifacts: |
-            ${{ matrix.repoName }}/apk/*.apk
+     
             
       
