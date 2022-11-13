@@ -21,11 +21,7 @@ jobs:
             branchName: main
             appName: TBox
             osName: tb
-          - userName: wwz09
-            repoName: MaoTV
-            branchName: main
-            appName: MaoTV
-            osName: lm
+   
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -40,6 +36,7 @@ jobs:
             echo "commit=$commit" >> $GITHUB_ENV
             echo "commitS=${commit:0:7}" >> $GITHUB_ENV
           fi
+          
       - name: Checkout Source Code and Zip
         if: ${{ env.commit }}
         run: |
@@ -77,6 +74,7 @@ jobs:
           else
             sed -i "/jitpack.io/a\        maven { url 'https://o0halflife0o.github.io/crosswalk/releases/crosswalk/android/maven2' }" build.gradle
           fi
+          
       - name: Option For Test
         if: ${{ inputs.testOption }}
         working-directory: ${{ matrix.repoName }}
@@ -84,6 +82,7 @@ jobs:
           #添加arm64支持，不支持ijk解码
           sed -i "/armeabi-v7a[\'\"]$/s#\$#, 'arm64-v8a'#" app/build.gradle
           sed -i "/armeabi-v7a[\'\"]$/s#\$#, 'arm64-v8a'#" player/build.gradle
+          
       - name: Release Apk Sign
         if: ${{ env.commit }}
         working-directory: ${{ matrix.repoName }}
