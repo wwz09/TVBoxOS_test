@@ -14,7 +14,7 @@ jobs:
           - userName: wwz09
             repoName: MaoTV
             branchName: main
-            appName: laomaoTV
+            appName: MaoTV
     steps:
       - name: Checkout
         uses: actions/checkout@v3
