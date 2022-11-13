@@ -15,14 +15,17 @@ jobs:
             repoName: QBox
             branchName: main
             appName: QBox
+            osName: qb
           - userName: wwz09
             repoName: TBox
             branchName: main
             appName: TBox
+            osName: tb
           - userName: wwz09
             repoName: MaoTV
             branchName: main
             appName: MaoTV
+            osName: lm
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -56,6 +59,7 @@ jobs:
           cp -rf $GITHUB_WORKSPACE/DIY/pyramid.aar app/libs/pyramid.aar
           sed -i 's%TVBox%${{ matrix.repoName }}%g' app/src/main/res/values/strings.xml
           sed -i 's%TVBox%${{ matrix.repoName }}%g' app/src/main/res/values-zh/strings.xml
+          sed -i 's%com.github.tvbox.osc%com.github.tvbox.osc.${{ matrix.osName }}%g' app/build.gradle
           sed -i 's%HawkConfig.HOME_REC, 2%HawkConfig.HOME_REC, 1%g' app/src/main/java/com/github/tvbox/osc/base/App.java
           sed -i 's%(HawkConfig.API_URL, "");%(HawkConfig.API_URL, "https://0a.fit/bbNnz");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java   
           sed -i 's%HomeActivity.getRes().getString(R.string.app_source));% "https://0a.fit/bbNnz");%g' app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java     
