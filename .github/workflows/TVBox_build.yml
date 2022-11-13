@@ -21,6 +21,11 @@ jobs:
             branchName: main
             appName: TBox
             osName: tb
+          - userName: wwz09
+            repoName: MaoTV
+            branchName: main
+            appName: TBox
+            osName: mt
    
     steps:
       - name: Checkout
