@@ -30,16 +30,15 @@ jobs:
           commit=$(curl -sL $upStream/commits/${{ matrix.branchName }} |grep -o "/${{ matrix.userName }}/${{ matrix.repoName }}/commit/[a-z0-9]\+" |head -1 | cut -d\/ -f5)
           if ! grep -q "$commit" README.md || [ "${{ inputs.rebuild }}" == "true" ]; then
             echo "commit=$commit" >> $GITHUB_ENV
-            echo "commitS=${commit:0:7}" >> $GITHUB_ENV
+            echo "tag=$(date -d '8 hour' -u +%Y%m%d-%H%M)" >> $GITHUB_ENV
           fi
       - name: Checkout Source Code and Zip
         if: ${{ env.commit }}
         run: |
           git clone ${{ env.upStream }} ${{ matrix.repoName }}
           cd ${{ matrix.repoName }}
-          git checkout ${{ env.commit }}
-          echo "tag=$(git log --date=format:'%Y%m%d-%H%M' --pretty=format:%cd ${{ env.commitS }} -1)" >> $GITHUB_ENV
-          zip -q -x ".git/*" -r source-${{ env.commitS }}.zip .
+          git checkout ${{ env.commit }}　
+          zip -q -x ".git/*" -r source.zip .
           
       - name: DIY
         if: ${{ env.commit }}
