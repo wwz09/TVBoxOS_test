@@ -69,6 +69,7 @@ jobs:
           else
             sed -i "/jitpack.io/a\        maven { url 'https://o0halflife0o.github.io/crosswalk/releases/crosswalk/android/maven2' }" build.gradle
           fi
+          
       - name: Option For Test
         if: ${{ inputs.testOption }}
         working-directory: ${{ matrix.repoName }}
@@ -76,6 +77,7 @@ jobs:
           #添加arm64支持，不支持ijk解码
           sed -i "/armeabi-v7a[\'\"]$/s#\$#, 'arm64-v8a'#" app/build.gradle
           sed -i "/armeabi-v7a[\'\"]$/s#\$#, 'arm64-v8a'#" player/build.gradle
+          
       - name: Release Apk Sign
         if: ${{ env.commit }}
         working-directory: ${{ matrix.repoName }}
@@ -97,6 +99,7 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew assemblerelease --build-cache --parallel --daemon --warning-mode all
+          
       - name: Prepare App
         if: ${{ env.commit }}
         working-directory: ${{ matrix.repoName }}
@@ -106,6 +109,7 @@ jobs:
           for file in `find ~ -name "*.apk" -print`; do
             mv "$file" apk/${{ matrix.userName }}_${{ matrix.appName }}_${{ env.tag }}.apk
           done
+          
       - name: Upload App To Artifact
         uses: actions/upload-artifact@v3
         if: ${{ env.commit }}
