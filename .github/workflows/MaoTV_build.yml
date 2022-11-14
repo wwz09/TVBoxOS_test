@@ -121,16 +121,15 @@ jobs:
           echo "commit=" >> $GITHUB_ENV
           
       - name: Release and Upload Assets
-        uses: softprops/action-gh-release@v1
+        uses: ncipollo/release-action@v1
         if: ${{ env.commit }}
         with:
           name: ${{ env.tag }}
-          tag_name: ${{ env.tag }}
-          body: ${{ env.commit }}
-          files: |
+          tag: ${{ env.tag }}
+          allowUpdates: true
+          removeArtifacts: true
+          artifacts: |
             ${{ matrix.repoName }}/apk/*.apk
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
             
       
       
