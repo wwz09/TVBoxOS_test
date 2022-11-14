@@ -38,7 +38,7 @@ jobs:
           cd ${{ matrix.repoName }}
           git checkout ${{ env.commit }}
           　echo "tag=$(git log --date=format:'%Y%m%d-%H%M' --pretty=format:%cd ${{ env.commitS }} -1)" >> $GITHUB_ENV
-          zip -q -x ".git/*" -r source-${{ env.commitS }}.zip .
+          zip -q -x ".git/*" -r source-${{ env.commit }}.zip .
           
       - name: DIY
         if: ${{ env.commit }}
