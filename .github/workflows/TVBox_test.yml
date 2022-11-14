@@ -37,8 +37,8 @@ jobs:
           git clone ${{ env.upStream }} ${{ matrix.repoName }}
           cd ${{ matrix.repoName }}
           git checkout ${{ env.commit }}
-          　echo "tag=$(git log --date=format:'%Y%m%d-%H%M' --pretty=format:%cd ${{ env.commitS }} -1)" >> $GITHUB_ENV
-          zip -q -x ".git/*" -r source-${{ env.commit }}.zip .
+          　echo "tag=$(git log --date=format:'%Y%m%d-%H%M' --pretty=format:%cd ${{ env.commits }} -1)" >> $GITHUB_ENV
+          zip -q -x ".git/*" -r source-${{ env.commitS }}.zip .
           
       - name: DIY
         if: ${{ env.commit }}
