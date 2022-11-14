@@ -126,7 +126,7 @@ jobs:
         with:
           name: ${{ env.tag }}
           tag: ${{ env.tag }}
-          allowUpdates: true
+          allowUpdates: false
           removeArtifacts: true
           artifacts: |
             ${{ matrix.repoName }}/apk/*.apk
